@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 const playAudio = async (uri: string, soundRef: React.RefObject<Audio.Sound | null>) => {
   try {
@@ -32,15 +32,7 @@ const getMp3File = async (mp3URL: string) => {
     body: JSON.stringify({ url: mp3URL }),
   });
 
-  console.log('Status: ', res.status);
-
-  const text = await res.text()
-  console.log("BODY:",text);
-  
-  
-
   const arrayBuffer = await res.arrayBuffer();
-  const cd = res.headers.get('content-disposition');
   const fileName =
     res.headers
       .get('content-disposition')
@@ -93,32 +85,41 @@ export default function Layout() {
   return (
     <>
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Cole o link da música..."
-        value={url}
-        onChangeText={setUrl}
-      />
-      <Pressable
-        style={styles.button}
-        onPress={async () => {
-          Alert.alert("Sua música está em processo de download!")
-          await getMp3File(url)
-
-          const files = await showMp3Files()
-          setMp3Files(files)
- 
-          Alert.alert("Sua música foi baixada!")
-        }}
-    ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
-    </View>
-    {mp3Files.map((file, index) => (
-      <Text key={index} style={styles.button} onPress={() => playAudio(file, soundRef)}>
-        {file.split('/').pop()}
-      </Text>
-    ))}
-
-    <Text style={styles.button}>oi</Text>
+      <View style={styles.downloadContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Cole o link da música..."
+          value={url}
+          onChangeText={setUrl}
+        />
+        <Pressable
+          style={[styles.button, styles.downloadButon]}
+          onPress={async () => {
+            Alert.alert("Sua música está em processo de download!")
+            await getMp3File(url)
+            const files = await showMp3Files()
+            setMp3Files(files)
+            Alert.alert("Sua música foi baixada!")
+          }}
+            ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
+      </View>
+    <FlatList
+            data={mp3Files}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Pressable
+                style={styles.button}
+                onPress={() => playAudio(item, soundRef)}
+              >
+                <Text style={styles.textInsideButton}>
+                  {item.split('/').pop()}
+                </Text>
+              </Pressable>
+              
+            )}
+            contentContainerStyle={{ paddingBottom: 50 }}
+          />
+      </View>
     </>
   )
 }
@@ -129,8 +130,11 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
     backgroundColor: '#fff',
-    position: "fixed",
-    top: "0%"
+  },
+  downloadContainer: {
+    top: "5%",
+    marginTop: "5%",
+    marginBottom: "7%"
   },
   input: {
     height: 50,
@@ -143,11 +147,14 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: "5%",
-    backgroundColor: "#2196F3",
     textAlign: "center",
+    backgroundColor: "#2196F3",
     color: "white",
-    padding: "2%",
+    padding: "5%",
     borderRadius: 5
+  },
+  downloadButon: {
+    backgroundColor: "#075fa7"
   },
   textInsideButton: {
     color: "white",
