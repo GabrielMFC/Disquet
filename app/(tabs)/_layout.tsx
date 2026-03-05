@@ -4,6 +4,23 @@ import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+
+// const downloadsDir = FileSystem.documentDirectory + 'disquet/';
+
+// async function clearDownloads() {
+//   try {
+//     const files = await FileSystem.readDirectoryAsync(downloadsDir);
+//     for (const file of files) {
+//       await FileSystem.deleteAsync(downloadsDir + file);
+//     }
+//     console.log('Downloads apagados');
+//   } catch (err) {
+//     console.log('Não há arquivos para apagar', err);
+//   }
+// }
+
+// clearDownloads();
+
 const playAudio = async (uri: string, soundRef: React.RefObject<Audio.Sound | null>) => {
   try {
     if (soundRef.current) {
@@ -23,30 +40,38 @@ const playAudio = async (uri: string, soundRef: React.RefObject<Audio.Sound | nu
   }
 };
 const getMp3File = async (mp3URL: string) => {
-  const folder = `${FileSystem.cacheDirectory}disquet/`;
-  if (!(await FileSystem.getInfoAsync(folder)).exists) await FileSystem.makeDirectoryAsync(folder, { intermediates: true });
+  const folder = `${FileSystem.documentDirectory}disquet/`;
   
-  const res = await fetch(process.env.EXPO_PUBLIC_YT_DLP_API?.trim()! as string, {
+  const res = await fetch(process.env.EXPO_PUBLIC_YT_DLP_API as string, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: mp3URL }),
   });
 
   const arrayBuffer = await res.arrayBuffer();
+  if (res.status !== 200 && res.status !== 201) {
+    Alert.alert("A requisição falhou.")
+    console.log(res.status);
+    throw new Error("Request failed.")
+  }
   const fileName =
-    res.headers
+    (res.headers
       .get('content-disposition')
       ?.match(/filename="?([^"]+)"?/)?.[1]
-    || 'default.mp3';
+      || 'default.mp3'
+    ).replace(/[\/\\\?%*:|"<>]/g, '-');
+  
   const fileUri = `${folder}${fileName}`;
 
   await FileSystem.writeAsStringAsync(fileUri, Buffer.from(arrayBuffer).toString('base64'), { encoding: FileSystem.EncodingType.Base64 });
   console.log('MP3 salvo em:', fileUri);
+  console.log("Status:", res.status);
+  
 };
 
 async function showMp3Files() {
   try {
-    const folder = `${FileSystem.cacheDirectory}disquet/`;
+  const folder = `${FileSystem.documentDirectory}disquet/`;
 
     const dirInfo = await FileSystem.getInfoAsync(folder);
     if (!dirInfo.exists) {
@@ -60,8 +85,6 @@ async function showMp3Files() {
       .filter(file => file.toLowerCase().endsWith('.mp3'))
       .map(file => `${folder}${file}`);
 
-    console.log('MP3 encontrados:', mp3Files);
-
     return mp3Files;
   } catch (error) {
     console.error('Erro ao listar MP3:', error);
@@ -73,6 +96,14 @@ export default function Layout() {
   const [url, setUrl] = useState('')
   const [mp3Files, setMp3Files] = useState<string[]>([])
   const soundRef = useRef<Audio.Sound | null>(null);
+
+  useEffect(() => {
+    const createMainFolder = async () => {
+      const folder = `${FileSystem.documentDirectory}disquet/`;
+      if (!(await FileSystem.getInfoAsync(folder)).exists) await FileSystem.makeDirectoryAsync(folder, { intermediates: true });
+    }
+    createMainFolder()
+  }, [])
 
   useEffect(() => {
     const showAllFiles = async () => {
