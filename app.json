@@ -50,6 +50,12 @@
           "supportsOpeningDocumentsInPlace": true,
           "enableFileSharing": true
         }
+      ],
+      [
+        "expo-audio", 
+      {   
+          "enableBackgroundPlayback": true
+      }
       ]
     ],
     "experiments": {

@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
-import { Audio } from "expo-av";
+import { setAudioModeAsync, useAudioPlayer } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 
@@ -21,28 +21,22 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'r
 
 // clearDownloads();
 
-const playAudio = async (uri: string, soundRef: React.RefObject<Audio.Sound | null>) => {
-  try {
-    if (soundRef.current) {
-      await soundRef.current.unloadAsync();
-      soundRef.current = null;
-    }
+const playAudio = async (uri: string) => {
 
-    const { sound } = await Audio.Sound.createAsync(
-      { uri },
-      { shouldPlay: true }
-    );
-
-    soundRef.current = sound;
-
-  } catch (error) {
-    console.error('Erro ao tocar áudio:', error);
-  }
+    // await Audio.setAudioModeAsync({
+    //   allowsRecordingIOS: false,
+    //   staysActiveInBackground: true,
+    //   interruptionModeIOS: Audio.,
+    //   playsInSilentModeIOS: true,
+    //   shouldDuckAndroid: true,
+    //   interruptionModeAndroid: Audio.InterruptionModeAndroid.DoNotMix,
+    // });
+    const audio = useAudioPlayer(uri)
 };
 const getMp3File = async (mp3URL: string) => {
   const folder = `${FileSystem.documentDirectory}disquet/`;
-  
-  const res = await fetch(process.env.EXPO_PUBLIC_YT_DLP_API as string, {
+
+  const res = await fetch("https://disquetapi-production.up.railway.app/download", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: mp3URL }),
@@ -95,7 +89,9 @@ async function showMp3Files() {
 export default function Layout() {
   const [url, setUrl] = useState('')
   const [mp3Files, setMp3Files] = useState<string[]>([])
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const [audio, setAudio] = useState("")
+
+  const player = useAudioPlayer(audio)
 
   useEffect(() => {
     const createMainFolder = async () => {
@@ -112,6 +108,19 @@ export default function Layout() {
     }
     showAllFiles()
   }, [])
+
+  useEffect(() => {
+      setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: 'doNotMix',
+    });
+  }, [])
+
+  const playAudio = () => {
+    player.setActiveForLockScreen(true, {})
+    player.play()
+  }
 
   return (
     <>
@@ -140,7 +149,10 @@ export default function Layout() {
             renderItem={({ item }) => (
               <Pressable
                 style={styles.button}
-                onPress={() => playAudio(item, soundRef)}
+                onPress={() => {
+                  setAudio(item)
+                  player.play()
+                }}
               >
                 <Text style={styles.textInsideButton}>
                   {item.split('/').pop()}
