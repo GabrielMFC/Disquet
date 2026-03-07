@@ -14,7 +14,9 @@
     "android": {
       "permissions": [
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -52,11 +54,12 @@
         }
       ],
       [
-        "expo-audio", 
-      {   
+        "expo-audio",
+        {
           "enableBackgroundPlayback": true
-      }
-      ]
+        }
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,

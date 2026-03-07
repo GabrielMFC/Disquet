@@ -117,9 +117,22 @@ export default function Layout() {
     });
   }, [])
 
-  const playAudio = () => {
-    player.setActiveForLockScreen(true, {})
+  useEffect(() => {
+    player.setActiveForLockScreen(true, {
+      title: "Disquet",
+      artist: "artista",
+      albumTitle: "album",
+      artworkUrl: "https://example.com/artwork.jpg"
+    })
+  }, [player])
+  const playMusic = () => {
     player.play()
+  }
+
+  const pauseMusic = () => {
+    player.pause()
+
+    player.setActiveForLockScreen(false)
   }
 
   return (
@@ -143,6 +156,9 @@ export default function Layout() {
           }}
             ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
       </View>
+      <View>
+        <Pressable style={styles.button} onPress={() => {pauseMusic()}}><Text style={styles.textInsideButton}>Pause</Text></Pressable>
+      </View>
     <FlatList
             data={mp3Files}
             keyExtractor={(item, index) => index.toString()}
@@ -151,7 +167,7 @@ export default function Layout() {
                 style={styles.button}
                 onPress={() => {
                   setAudio(item)
-                  player.play()
+                  playMusic()
                 }}
               >
                 <Text style={styles.textInsideButton}>

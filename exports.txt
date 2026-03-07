@@ -1,0 +1,37 @@
+# ================================
+# JAVA (SDKMAN - força usar Java 17)
+# ================================
+export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+export GRADLE_JAVA_HOME="$JAVA_HOME"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# ================================
+# ANDROID SDK
+# ================================
+export ANDROID_HOME="$HOME/Android"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+# ================================
+# ANDROID COMMAND LINE TOOLS
+# ================================
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+
+# ================================
+# PLATFORM TOOLS (adb, fastboot)
+# ================================
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+# ================================
+# BUILD TOOLS (usado pelo Gradle)
+# ================================
+export PATH="$ANDROID_HOME/build-tools/36.0.0:$PATH"
+
+# ================================
+# EMULATOR (não obrigatório, mas seguro)
+# ================================
+export PATH="$ANDROID_HOME/emulator:$PATH"
+
+# ================================
+# NDK (caso o Gradle precise)
+# ================================
+export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.1.12297006"
