@@ -4,7 +4,6 @@ import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-
 // const downloadsDir = FileSystem.documentDirectory + 'disquet/';
 
 // async function clearDownloads() {
@@ -21,18 +20,6 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'r
 
 // clearDownloads();
 
-const playAudio = async (uri: string) => {
-
-    // await Audio.setAudioModeAsync({
-    //   allowsRecordingIOS: false,
-    //   staysActiveInBackground: true,
-    //   interruptionModeIOS: Audio.,
-    //   playsInSilentModeIOS: true,
-    //   shouldDuckAndroid: true,
-    //   interruptionModeAndroid: Audio.InterruptionModeAndroid.DoNotMix,
-    // });
-    const audio = useAudioPlayer(uri)
-};
 const getMp3File = async (mp3URL: string) => {
   const folder = `${FileSystem.documentDirectory}disquet/`;
 
@@ -117,15 +104,13 @@ export default function Layout() {
     });
   }, [])
 
-  useEffect(() => {
+  const playMusic = () => {
     player.setActiveForLockScreen(true, {
       title: "Disquet",
       artist: "artista",
       albumTitle: "album",
       artworkUrl: "https://example.com/artwork.jpg"
     })
-  }, [player])
-  const playMusic = () => {
     player.play()
   }
 
