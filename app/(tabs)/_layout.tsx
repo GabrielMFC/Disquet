@@ -1,20 +1,24 @@
 import { Buffer } from 'buffer';
-import { setAudioModeAsync, useAudioPlayer } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import TrackPlayer, { Capability } from 'react-native-track-player';
+import TrackPlayer, { Capability, State } from 'react-native-track-player';
 
-async function setupPlayer() {
-  await TrackPlayer.setupPlayer();
-  await TrackPlayer.updateOptions({
-    capabilities: [Capability.Play, Capability.Pause],
-  });
+TrackPlayer.registerPlaybackService(() => require('../../musicBackgroundService'));
+
+async function configurePlayer() {
+  try {
+    await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({
+      capabilities: [Capability.Play, Capability.Pause],
+    });
+  } catch (e) {
+  }
 }
 
-async function playAudio(uri: string) {
+async function playAudio(uri: string, artist: string) {
   await TrackPlayer.reset();
-  await TrackPlayer.add({ url: uri, title: 'Disquet', artist: 'Tocando...' });
+  await TrackPlayer.add({ url: uri, title: 'Disquet', artist: artist });
   await TrackPlayer.play();
 }
 
@@ -43,9 +47,6 @@ const getMp3File = async (mp3URL: string) => {
   const fileUri = `${folder}${fileName}`;
 
   await FileSystem.writeAsStringAsync(fileUri, Buffer.from(arrayBuffer).toString('base64'), { encoding: FileSystem.EncodingType.Base64 });
-  console.log('MP3 salvo em:', fileUri);
-  console.log("Status:", res.status);
-  
 };
 
 async function showMp3Files() {
@@ -76,8 +77,6 @@ export default function Layout() {
   const [mp3Files, setMp3Files] = useState<string[]>([])
   const [audio, setAudio] = useState("")
 
-  const player = useAudioPlayer(audio)
-
   useEffect(() => {
     const createMainFolder = async () => {
       const folder = `${FileSystem.documentDirectory}disquet/`;
@@ -95,31 +94,16 @@ export default function Layout() {
   }, [])
 
   useEffect(() => {
-      setAudioModeAsync({
-      playsInSilentMode: true,
-      shouldPlayInBackground: true,
-      interruptionMode: 'doNotMix',
-    });
+    configurePlayer()
   }, [])
 
-  useEffect(() => {
-    setupPlayer()
-  }, [])
-
-  const playMusic = () => {
-    player.setActiveForLockScreen(true, {
-      title: "Disquet",
-      artist: "artista",
-      albumTitle: "album",
-      artworkUrl: "https://example.com/artwork.jpg"
-    })
-    player.play()
-  }
-
-  const pauseMusic = () => {
-    player.pause()
-
-    player.setActiveForLockScreen(false)
+  async function togglePlayPause() {
+    const state = await TrackPlayer.getPlaybackState();
+    if (state.state === State.Playing) {
+      await TrackPlayer.pause();
+    } else {
+      await TrackPlayer.play();
+    }
   }
 
   return (
@@ -144,7 +128,7 @@ export default function Layout() {
             ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
       </View>
       <View>
-        <Pressable style={styles.button} onPress={() => {pauseMusic()}}><Text style={styles.textInsideButton}>Pause</Text></Pressable>
+        <Pressable style={styles.button} onPress={() => {togglePlayPause()}}><Text style={styles.textInsideButton}>Pause</Text></Pressable>
       </View>
     <FlatList
             data={mp3Files}
@@ -154,7 +138,7 @@ export default function Layout() {
                 style={styles.button}
                 onPress={() => {
                   setAudio(item)
-                  playAudio(item)
+                  playAudio(item, item.split("/").pop() as string)
                 }}
               >
                 <Text style={styles.textInsideButton}>
