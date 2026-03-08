@@ -3,22 +3,20 @@ import { setAudioModeAsync, useAudioPlayer } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import TrackPlayer, { Capability } from 'react-native-track-player';
 
-// const downloadsDir = FileSystem.documentDirectory + 'disquet/';
+async function setupPlayer() {
+  await TrackPlayer.setupPlayer();
+  await TrackPlayer.updateOptions({
+    capabilities: [Capability.Play, Capability.Pause],
+  });
+}
 
-// async function clearDownloads() {
-//   try {
-//     const files = await FileSystem.readDirectoryAsync(downloadsDir);
-//     for (const file of files) {
-//       await FileSystem.deleteAsync(downloadsDir + file);
-//     }
-//     console.log('Downloads apagados');
-//   } catch (err) {
-//     console.log('Não há arquivos para apagar', err);
-//   }
-// }
-
-// clearDownloads();
+async function playAudio(uri: string) {
+  await TrackPlayer.reset();
+  await TrackPlayer.add({ url: uri, title: 'Disquet', artist: 'Tocando...' });
+  await TrackPlayer.play();
+}
 
 const getMp3File = async (mp3URL: string) => {
   const folder = `${FileSystem.documentDirectory}disquet/`;
@@ -104,6 +102,10 @@ export default function Layout() {
     });
   }, [])
 
+  useEffect(() => {
+    setupPlayer()
+  }, [])
+
   const playMusic = () => {
     player.setActiveForLockScreen(true, {
       title: "Disquet",
@@ -152,7 +154,7 @@ export default function Layout() {
                 style={styles.button}
                 onPress={() => {
                   setAudio(item)
-                  playMusic()
+                  playAudio(item)
                 }}
               >
                 <Text style={styles.textInsideButton}>

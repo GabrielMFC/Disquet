@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "disquet",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.disquet"
