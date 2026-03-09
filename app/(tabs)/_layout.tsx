@@ -1,8 +1,16 @@
 import { Buffer } from 'buffer';
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import TrackPlayer, { Capability, State } from 'react-native-track-player';
+import { Alert, FlatList, Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import TrackPlayer, { AppKilledPlaybackBehavior, Capability, State } from 'react-native-track-player';
+
+async function requestBatteryOptimization() {
+  if (Platform.OS === 'android') {
+    await Linking.sendIntent('android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS', [
+      { key: 'package', value: 'com.anonymous.disquet' }
+    ]);
+  }
+}
 
 TrackPlayer.registerPlaybackService(() => require('../../musicBackgroundService'));
 
@@ -11,6 +19,10 @@ async function configurePlayer() {
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
       capabilities: [Capability.Play, Capability.Pause],
+      compactCapabilities: [Capability.Play, Capability.Pause],
+      android: {
+        appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
+      },
     });
   } catch (e) {
   }
