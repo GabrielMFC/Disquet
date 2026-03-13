@@ -42,7 +42,6 @@ app-example
 
 # generated native folders
 /ios
-/android
 
 # builded apk files
 *.apk

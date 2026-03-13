@@ -1,16 +1,9 @@
 import { Buffer } from 'buffer';
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, NativeModules, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, State } from 'react-native-track-player';
-
-async function requestBatteryOptimization() {
-  if (Platform.OS === 'android') {
-    await Linking.sendIntent('android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS', [
-      { key: 'package', value: 'com.anonymous.disquet' }
-    ]);
-  }
-}
+const {YtDlp} = NativeModules
 
 TrackPlayer.registerPlaybackService(() => require('../../musicBackgroundService'));
 
@@ -37,7 +30,7 @@ async function playAudio(uri: string, artist: string) {
 const getMp3File = async (mp3URL: string) => {
   const folder = `${FileSystem.documentDirectory}disquet/`;
 
-  const res = await fetch("https://disquetapi-production.up.railway.app/download", {
+  const res = await fetch("http://127.0.0.1:3000/download", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: mp3URL }),
@@ -58,6 +51,8 @@ const getMp3File = async (mp3URL: string) => {
   
   const fileUri = `${folder}${fileName}`;
 
+  console.log("Arquivo salvo em: ", fileUri);
+
   await FileSystem.writeAsStringAsync(fileUri, Buffer.from(arrayBuffer).toString('base64'), { encoding: FileSystem.EncodingType.Base64 });
 };
 
@@ -67,7 +62,6 @@ async function showMp3Files() {
 
     const dirInfo = await FileSystem.getInfoAsync(folder);
     if (!dirInfo.exists) {
-      console.log('Pasta disquet não existe.');
       return [];
     }
 
@@ -88,6 +82,20 @@ export default function Layout() {
   const [url, setUrl] = useState('')
   const [mp3Files, setMp3Files] = useState<string[]>([])
   const [audio, setAudio] = useState("")
+
+  const handleDownload = async (url: string) => {
+    try {
+      const filePath = await YtDlp.download(url);
+      const fileName = filePath.split('/').pop(); // pega só o nome do arquivo
+      console.log('arquivo:', fileName);
+      console.log('path completo:', filePath);
+      
+      const files = await showMp3Files();
+      setMp3Files(files);
+    } catch (e) {
+      console.log('erro:', e);
+    }
+  };
 
   useEffect(() => {
     const createMainFolder = async () => {
@@ -132,7 +140,7 @@ export default function Layout() {
           style={[styles.button, styles.downloadButon]}
           onPress={async () => {
             Alert.alert("Sua música está em processo de download!")
-            await getMp3File(url)
+            await handleDownload(url)
             const files = await showMp3Files()
             setMp3Files(files)
             Alert.alert("Sua música foi baixada!")
