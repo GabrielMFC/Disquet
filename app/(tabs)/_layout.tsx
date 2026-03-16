@@ -1,11 +1,11 @@
-import { Buffer } from 'buffer';
+import { PlaybackService } from '@/src/player/musicBackgroundService';
+import AudioController from '@/src/useCases/AudioController';
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, NativeModules, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, State } from 'react-native-track-player';
-const {YtDlp} = NativeModules
 
-TrackPlayer.registerPlaybackService(() => require('../../musicBackgroundService'));
+TrackPlayer.registerPlaybackService(() => PlaybackService);
 
 async function configurePlayer() {
   try {
@@ -21,81 +21,11 @@ async function configurePlayer() {
   }
 }
 
-async function playAudio(uri: string, artist: string) {
-  await TrackPlayer.reset();
-  await TrackPlayer.add({ url: uri, title: 'Disquet', artist: artist });
-  await TrackPlayer.play();
-}
-
-const getMp3File = async (mp3URL: string) => {
-  const folder = `${FileSystem.documentDirectory}disquet/`;
-
-  const res = await fetch("http://127.0.0.1:3000/download", {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: mp3URL }),
-  });
-
-  const arrayBuffer = await res.arrayBuffer();
-  if (res.status !== 200 && res.status !== 201) {
-    Alert.alert("A requisição falhou.")
-    console.log(res.status);
-    throw new Error("Request failed.")
-  }
-  const fileName =
-    (res.headers
-      .get('content-disposition')
-      ?.match(/filename="?([^"]+)"?/)?.[1]
-      || 'default.mp3'
-    ).replace(/[\/\\\?%*:|"<>]/g, '-');
-  
-  const fileUri = `${folder}${fileName}`;
-
-  console.log("Arquivo salvo em: ", fileUri);
-
-  await FileSystem.writeAsStringAsync(fileUri, Buffer.from(arrayBuffer).toString('base64'), { encoding: FileSystem.EncodingType.Base64 });
-};
-
-async function showMp3Files() {
-  try {
-  const folder = `${FileSystem.documentDirectory}disquet/`;
-
-    const dirInfo = await FileSystem.getInfoAsync(folder);
-    if (!dirInfo.exists) {
-      return [];
-    }
-
-    const files = await FileSystem.readDirectoryAsync(folder);
-
-    const mp3Files = files
-      .filter(file => file.toLowerCase().endsWith('.mp3'))
-      .map(file => `${folder}${file}`);
-
-    return mp3Files;
-  } catch (error) {
-    console.error('Erro ao listar MP3:', error);
-    return [];
-  }
-}
-
 export default function Layout() {
   const [url, setUrl] = useState('')
   const [mp3Files, setMp3Files] = useState<string[]>([])
   const [audio, setAudio] = useState("")
-
-  const handleDownload = async (url: string) => {
-    try {
-      const filePath = await YtDlp.download(url);
-      const fileName = filePath.split('/').pop(); // pega só o nome do arquivo
-      console.log('arquivo:', fileName);
-      console.log('path completo:', filePath);
-      
-      const files = await showMp3Files();
-      setMp3Files(files);
-    } catch (e) {
-      console.log('erro:', e);
-    }
-  };
+  const audioController = new AudioController()
 
   useEffect(() => {
     const createMainFolder = async () => {
@@ -107,7 +37,7 @@ export default function Layout() {
 
   useEffect(() => {
     const showAllFiles = async () => {
-      const files = await showMp3Files()
+      const files = await audioController.getMp3FilesList()
       setMp3Files(files)
     }
     showAllFiles()
@@ -139,11 +69,15 @@ export default function Layout() {
         <Pressable
           style={[styles.button, styles.downloadButon]}
           onPress={async () => {
-            Alert.alert("Sua música está em processo de download!")
-            await handleDownload(url)
-            const files = await showMp3Files()
-            setMp3Files(files)
-            Alert.alert("Sua música foi baixada!")
+            try {
+              Alert.alert("Sua música está em processo de download!")
+              await audioController.downloadAudio(url)
+              const files = await audioController.getMp3FilesList()
+              setMp3Files(files)
+              Alert.alert("Sua música foi baixada!") 
+            } catch (error) {
+              Alert.alert("Ocorreu um erro, tente novamente mais tarde.")
+            }
           }}
             ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
       </View>
@@ -158,7 +92,8 @@ export default function Layout() {
                 style={styles.button}
                 onPress={() => {
                   setAudio(item)
-                  playAudio(item, item.split("/").pop() as string)
+                  audioController.setLockScreen(item, item.split("/").pop() as string)
+                  audioController.play()
                 }}
               >
                 <Text style={styles.textInsideButton}>

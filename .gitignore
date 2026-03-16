@@ -44,4 +44,5 @@ app-example
 /ios
 
 # builded apk files
+build
 *.apk

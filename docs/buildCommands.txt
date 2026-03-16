@@ -1,0 +1,7 @@
+Development build:
+
+npx expo run:android --device
+
+Production build:
+
+eas build --platform android --profile production --local --output ./build/disquet-0.2.5-arch32bits.apk
