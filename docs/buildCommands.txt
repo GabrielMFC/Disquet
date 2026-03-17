@@ -4,4 +4,7 @@ npx expo run:android --device
 
 Production build:
 
-eas build --platform android --profile production --local --output ./build/disquet-0.2.5-arch32bits.apk
+eas build --platform android --profile production --local --output ./build/disquet-0.2.6.apk
+
+Para dispositivos com arquitetura 32 bits:
+eas build --platform android --profile production --local --output ./build/disquet-0.2.6-arch32bits.apk

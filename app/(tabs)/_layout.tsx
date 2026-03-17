@@ -24,7 +24,7 @@ async function configurePlayer() {
 export default function Layout() {
   const [url, setUrl] = useState('')
   const [mp3Files, setMp3Files] = useState<string[]>([])
-  const [audio, setAudio] = useState("")
+  const [blockDownloadButton, setBlockDownloadButton] = useState(false)
   const audioController = new AudioController()
 
   useEffect(() => {
@@ -67,16 +67,23 @@ export default function Layout() {
           onChangeText={setUrl}
         />
         <Pressable
-          style={[styles.button, styles.downloadButon]}
+          style={[styles.button, !blockDownloadButton ? styles.downloadButon : styles.disableButton]}
+          disabled={blockDownloadButton}
           onPress={async () => {
+            setBlockDownloadButton(true)
             try {
               Alert.alert("Sua música está em processo de download!")
               await audioController.downloadAudio(url)
               const files = await audioController.getMp3FilesList()
               setMp3Files(files)
+              
               Alert.alert("Sua música foi baixada!") 
             } catch (error) {
               Alert.alert("Ocorreu um erro, tente novamente mais tarde.")
+              console.log(error);
+            }
+            finally{
+              setBlockDownloadButton(false)
             }
           }}
             ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
@@ -91,7 +98,6 @@ export default function Layout() {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  setAudio(item)
                   audioController.setLockScreen(item, item.split("/").pop() as string)
                   audioController.play()
                 }}
@@ -140,6 +146,9 @@ const styles = StyleSheet.create({
   },
   downloadButon: {
     backgroundColor: "#075fa7"
+  },
+  disableButton: {
+    backgroundColor: "#808080"
   },
   textInsideButton: {
     color: "white",

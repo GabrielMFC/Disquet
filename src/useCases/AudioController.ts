@@ -33,12 +33,9 @@ export default class AudioController {
 
     async downloadAudio(url: string) {
         try {
-            const filePath = await YtDlp.download(url);
-            const fileName = filePath.split('/').pop();
-            console.log('arquivo:', fileName);
-            console.log('path completo:', filePath);
+            await YtDlp.download(url);
         } catch (e) {
-            console.log('erro:', e);
+            throw new Error("Error: " + e);   
         }
     }
 
