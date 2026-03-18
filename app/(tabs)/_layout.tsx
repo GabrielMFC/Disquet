@@ -1,8 +1,11 @@
+import { buttonStyles } from '@/src/commonStyles/buttons';
+import BottomBar from '@/src/components/bottomBar/BottomBar';
 import { PlaybackService } from '@/src/player/musicBackgroundService';
 import AudioController from '@/src/useCases/AudioController';
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, State } from 'react-native-track-player';
 
 TrackPlayer.registerPlaybackService(() => PlaybackService);
@@ -57,7 +60,7 @@ export default function Layout() {
   }
 
   return (
-    <>
+    <SafeAreaProvider>
     <View style={styles.container}>
       <View style={styles.downloadContainer}>
         <TextInput
@@ -67,7 +70,7 @@ export default function Layout() {
           onChangeText={setUrl}
         />
         <Pressable
-          style={[styles.button, !blockDownloadButton ? styles.downloadButon : styles.disableButton]}
+          style={[buttonStyles.button, !blockDownloadButton ? buttonStyles.downloadButon : buttonStyles.disableButton, {width: "90%"}]}
           disabled={blockDownloadButton}
           onPress={async () => {
             setBlockDownloadButton(true)
@@ -86,23 +89,23 @@ export default function Layout() {
               setBlockDownloadButton(false)
             }
           }}
-            ><Text style={styles.textInsideButton}>Baixar música</Text></Pressable>
+            ><Text style={buttonStyles.textInsideButton}>Baixar música</Text></Pressable>
       </View>
       <View>
-        <Pressable style={styles.button} onPress={() => {togglePlayPause()}}><Text style={styles.textInsideButton}>Pause</Text></Pressable>
+        <Pressable style={buttonStyles.button} onPress={() => {togglePlayPause()}}><Text style={buttonStyles.textInsideButton}>Pause</Text></Pressable>
       </View>
-    <FlatList
+      <FlatList
             data={mp3Files}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <Pressable
-                style={styles.button}
+                style={buttonStyles.button}
                 onPress={() => {
                   audioController.setLockScreen(item, item.split("/").pop() as string)
                   audioController.play()
                 }}
               >
-                <Text style={styles.textInsideButton}>
+                <Text style={buttonStyles.textInsideButton}>
                   {item.split('/').pop()}
                 </Text>
               </Pressable>
@@ -110,24 +113,29 @@ export default function Layout() {
             )}
             contentContainerStyle={{ paddingBottom: 50 }}
           />
+        <BottomBar/>
       </View>
-    </>
+    </SafeAreaProvider>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     justifyContent: 'center',
     backgroundColor: '#fff',
   },
   downloadContainer: {
     top: "5%",
     marginTop: "5%",
-    marginBottom: "7%"
+    marginBottom: "7%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column"
   },
   input: {
+    width: "90%",
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -135,24 +143,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     color: "black"
-  },
-  button: {
-    margin: "5%",
-    textAlign: "center",
-    backgroundColor: "#2196F3",
-    color: "white",
-    padding: "5%",
-    borderRadius: 5
-  },
-  downloadButon: {
-    backgroundColor: "#075fa7"
-  },
-  disableButton: {
-    backgroundColor: "#808080"
-  },
-  textInsideButton: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "bold"
   }
 })
