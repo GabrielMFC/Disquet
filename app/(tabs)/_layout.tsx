@@ -1,13 +1,14 @@
-import { buttonStyles } from '@/src/commonStyles/buttons';
 import BottomBar from '@/src/components/bottomBar/BottomBar';
+import { AppProvider, useAppContext } from '@/src/context/AppContext';
+import DownloadPage from '@/src/pages/downloadPage';
+import Home from '@/src/pages/home';
 import { PlaybackService } from '@/src/player/musicBackgroundService';
 import AudioController from '@/src/useCases/AudioController';
 import * as FileSystem from "expo-file-system/legacy";
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TrackPlayer, { AppKilledPlaybackBehavior, Capability, State } from 'react-native-track-player';
-
 TrackPlayer.registerPlaybackService(() => PlaybackService);
 
 async function configurePlayer() {
@@ -24,12 +25,23 @@ async function configurePlayer() {
   }
 }
 
-export default function Layout() {
-  const [url, setUrl] = useState('')
-  const [mp3Files, setMp3Files] = useState<string[]>([])
-  const [blockDownloadButton, setBlockDownloadButton] = useState(false)
-  const audioController = new AudioController()
+function AppContent() {
+    const { selectedPage } = useAppContext()
 
+    return (
+        <View style={styles.container}>
+            {(selectedPage === "home" || selectedPage === "") && <Home />}
+            {selectedPage === "download" && <DownloadPage />}
+            <BottomBar />
+        </View>
+    )
+}
+
+export default function Layout() {
+  const [mp3Files, setMp3Files] = useState<string[]>([])
+  const audioController = new AudioController()
+  const {selectedPage} = useAppContext()
+  
   useEffect(() => {
     const createMainFolder = async () => {
       const folder = `${FileSystem.documentDirectory}disquet/`;
@@ -60,79 +72,21 @@ export default function Layout() {
   }
 
   return (
+    <AppProvider>
     <SafeAreaProvider>
-    <View style={styles.container}>
-      <View style={styles.downloadContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Cole o link da música..."
-          value={url}
-          onChangeText={setUrl}
-        />
-        <Pressable
-          style={[buttonStyles.button, !blockDownloadButton ? buttonStyles.downloadButon : buttonStyles.disableButton, {width: "90%"}]}
-          disabled={blockDownloadButton}
-          onPress={async () => {
-            setBlockDownloadButton(true)
-            try {
-              Alert.alert("Sua música está em processo de download!")
-              await audioController.downloadAudio(url)
-              const files = await audioController.getMp3FilesList()
-              setMp3Files(files)
-              
-              Alert.alert("Sua música foi baixada!") 
-            } catch (error) {
-              Alert.alert("Ocorreu um erro, tente novamente mais tarde.")
-              console.log(error);
-            }
-            finally{
-              setBlockDownloadButton(false)
-            }
-          }}
-            ><Text style={buttonStyles.textInsideButton}>Baixar música</Text></Pressable>
-      </View>
-      <View>
-        <Pressable style={buttonStyles.button} onPress={() => {togglePlayPause()}}><Text style={buttonStyles.textInsideButton}>Pause</Text></Pressable>
-      </View>
-      <FlatList
-            data={mp3Files}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <Pressable
-                style={buttonStyles.button}
-                onPress={() => {
-                  audioController.setLockScreen(item, item.split("/").pop() as string)
-                  audioController.play()
-                }}
-              >
-                <Text style={buttonStyles.textInsideButton}>
-                  {item.split('/').pop()}
-                </Text>
-              </Pressable>
-              
-            )}
-            contentContainerStyle={{ paddingBottom: 50 }}
-          />
+      <View style={styles.container}>
+        <AppContent/>
         <BottomBar/>
       </View>
     </SafeAreaProvider>
+    </AppProvider>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#fff',
-  },
-  downloadContainer: {
-    top: "5%",
-    marginTop: "5%",
-    marginBottom: "7%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column"
   },
   input: {
     width: "90%",

@@ -16,7 +16,7 @@ export default class AudioController {
             const files = await FileSystem.readDirectoryAsync(folder);
         
             const mp3Files = files
-                .filter(file => file.toLowerCase().endsWith('.mp3'))
+                .filter(file => file.toLowerCase().endsWith('.mp3') || file.toLowerCase().endsWith('.m4a'))
                 .map(file => `${folder}${file}`);
     
         return mp3Files;
@@ -40,6 +40,18 @@ export default class AudioController {
     }
 
     async play() {
+        await TrackPlayer.play()
+    }
+
+    async playAllMusics(musicsList: string[]) {
+        await TrackPlayer.reset()
+        let i
+        for(i = 0; i < musicsList.length; i++){
+            await TrackPlayer.add([{
+                id: i,
+                url: musicsList[i]
+            }])
+        }
         await TrackPlayer.play()
     }
 }

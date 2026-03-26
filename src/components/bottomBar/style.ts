@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const bottomBarStyles = StyleSheet.create({
     bottomBarContainer: {
-        position: "fixed",
+        position: "absolute",
         backgroundColor: "#075fa7",
         width: "100%",
         height: 90,

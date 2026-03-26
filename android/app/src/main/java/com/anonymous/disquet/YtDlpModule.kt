@@ -5,16 +5,18 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
+
 class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     override fun getName() = "YtDlp"
 
-@ReactMethod
+    @ReactMethod
     fun download(url: String, promise: Promise) {
         Thread {
             try {
                 val outputDir = reactApplicationContext.filesDir.absolutePath + "/disquet/"
                 val file = java.io.File(outputDir)
                 if (!file.exists()) file.mkdirs()
+
                 val request = YoutubeDLRequest(url)
                 request.addOption("--no-playlist")
                 request.addOption("--extractor-args", "youtube:player_client=android,ios,web")
@@ -22,14 +24,16 @@ class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
                 request.addOption("-f", "140/bestaudio/best")
                 request.addOption("-x")
                 request.addOption("--audio-format", "mp3")
+                request.addOption("--postprocessor-args", "ffmpeg:-af loudnorm=I=-14:TP=-1.5:LRA=11")
                 request.addOption("--audio-quality", "0")
                 request.addOption("-o", "$outputDir%(title)s.%(ext)s")
-                val response = YoutubeDL.getInstance().execute(request) { progress, eta, line ->
+
+                YoutubeDL.getInstance().execute(request) { progress, eta, line ->
                     android.util.Log.d("YtDlp", "$progress%")
                 }
-                // Pega o arquivo mais recente da pasta
-                val downloadedFile = file.listFiles()
-                    ?.maxByOrNull { it.lastModified() }
+
+                val downloadedFile = file.listFiles()?.maxByOrNull { it.lastModified() }
+
                 if (downloadedFile != null) {
                     promise.resolve(downloadedFile.absolutePath)
                 } else {
