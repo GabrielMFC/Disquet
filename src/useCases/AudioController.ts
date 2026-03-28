@@ -16,7 +16,7 @@ export default class AudioController {
             const files = await FileSystem.readDirectoryAsync(folder);
         
             const mp3Files = files
-                .filter(file => file.toLowerCase().endsWith('.mp3') || file.toLowerCase().endsWith('.m4a'))
+                .filter(file => file.toLowerCase())
                 .map(file => `${folder}${file}`);
     
         return mp3Files;
@@ -35,7 +35,8 @@ export default class AudioController {
         try {
             await YtDlp.download(url);
         } catch (e) {
-            throw new Error("Error: " + e);   
+            console.log("Erro original:", e);
+            throw e;
         }
     }
 

@@ -1,4 +1,5 @@
 import { buttonStyles } from "@/src/commonStyles/buttons";
+import { centralizeFlex } from "@/src/commonStyles/centralizeFlex";
 import AudioController from "@/src/useCases/AudioController";
 import * as FileSystem from "expo-file-system/legacy";
 import { useEffect, useState } from "react";
@@ -29,24 +30,26 @@ export default function Home() {
             <Pressable onPress={() => audioController.playAllMusics(mp3Files)} style={[buttonStyles.button, {marginTop: "15%", backgroundColor: "#075fa7"}]}>
                 <Text style={buttonStyles.textInsideButton}>Reproduzir tudo</Text>
             </Pressable>
-            <FlatList
-            data={mp3Files}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <Pressable
-                style={buttonStyles.button}
-                onPress={() => {
-                  audioController.setLockScreen(item, item.split("/").pop() as string)
-                  audioController.play()
-                }}
-              >
-                <Text style={buttonStyles.textInsideButton}>
-                  {item.split('/').pop()}
-                </Text>
-              </Pressable>
-              
+            <FlatList 
+              style={{width: "100%"}}
+              contentContainerStyle={[centralizeFlex.containerFlex, {padding:0,paddingBottom: 200}]}
+              data={mp3Files}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View  style={[centralizeFlex.containerFlex,{marginBottom:"5%",width: '80%',flexDirection:"row" }]}>
+                  <Pressable
+                    style={[buttonStyles.button, {margin: "0%",flex:1, alignSelf:"stretch"}]}
+                    onPress={() => {
+                      audioController.setLockScreen(item, item.split("/").pop() as string)
+                      audioController.play()
+                    }}
+                    >
+                    <Text style={buttonStyles.textInsideButton}>
+                      {item.split('/').pop()}
+                    </Text>
+                  </Pressable>
+                </View>
             )}
-            contentContainerStyle={{ paddingBottom: 50 }}
           />
         </View>
     )

@@ -50,6 +50,15 @@ class MainApplication : Application(), ReactApplication {
     } catch (e: YoutubeDLException) {
       Log.e("YoutubeDL", "failed to initialize youtubedl-android", e)
     }
+
+    Thread {
+      try {
+        YoutubeDL.getInstance().updateYoutubeDL(this)
+        Log.d("YtDlp", "Atualizado com sucesso")
+      } catch (e: Exception) {
+        Log.e("YtDlp", "Erro ao atualizar: ${e.message}")
+      }
+    }.start()
   }
 
   override fun onConfigurationChanged(newConfig: Configuration) {

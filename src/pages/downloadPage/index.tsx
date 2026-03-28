@@ -1,15 +1,47 @@
 import { buttonStyles } from "@/src/commonStyles/buttons"
 import { inputStyles } from "@/src/commonStyles/input"
 import AudioController from "@/src/useCases/AudioController"
-import { useState } from "react"
-import { Alert, Pressable, Text, TextInput, View } from "react-native"
+import { useEffect, useState } from "react"
+import { Alert, NativeEventEmitter, NativeModules, Pressable, Text, TextInput, View } from "react-native"
 import { styles } from "./styles"
 
 export default function DownloadPage() {
     const [url, setUrl] = useState('')
     const [blockDownloadButton, setBlockDownloadButton] = useState(false)
     const [mp3Files, setMp3Files] = useState<string[]>([])
-    const audioController = new AudioController()
+    const [downloadProgression, setDownloadProgression] = useState(0)
+    const [statusText, setStatusText] = useState("")
+    const { YtDlp } = NativeModules;
+    const emitter = useState(() => new NativeEventEmitter(YtDlp))[0];
+    const audioController = useState(() => new AudioController())[0];
+
+    useEffect(() => {
+        const progressSub = emitter.addListener("downloadProgress", (progress) => {
+            const p = Number(progress);
+            if (p < 0) return;
+            
+            setDownloadProgression(prev => Math.max(prev, p));
+        });
+
+        const statusSub = emitter.addListener("downloadStatus", (text) => {
+            
+            setStatusText(text);
+        });
+
+        const completeSub = emitter.addListener("downloadComplete", async () => {
+            const files = await audioController.getMp3FilesList();
+            setMp3Files(files);
+
+            setBlockDownloadButton(false);
+            Alert.alert("Sua música foi baixada!");
+        });
+
+        return () => {
+            progressSub.remove();
+            statusSub.remove();
+            completeSub.remove();
+        };
+    }, []);
 
     return (
         <View style={styles.downloadContainer}>
@@ -22,24 +54,27 @@ export default function DownloadPage() {
         <Pressable
             style={[buttonStyles.button, !blockDownloadButton ? buttonStyles.downloadButon : buttonStyles.disableButton, {width: "90%"}]}
             disabled={blockDownloadButton}
-            onPress={async () => {
-            setBlockDownloadButton(true)
-            try {
-                Alert.alert("Sua música está em processo de download!")
-                await audioController.downloadAudio(url)
-                const files = await audioController.getMp3FilesList()
-                setMp3Files(files)
-                
-                Alert.alert("Sua música foi baixada!") 
-            } catch (error) {
-                Alert.alert("Ocorreu um erro, tente novamente mais tarde.")
-                console.log(error);
-            }
-            finally{
-                setBlockDownloadButton(false)
-            }
+            onPress={() => {
+                setDownloadProgression(0);
+                setStatusText("Preparando...");
+                setBlockDownloadButton(true);
+
+                audioController.downloadAudio(url);
             }}
             ><Text style={buttonStyles.textInsideButton}>Baixar música</Text></Pressable>
+            <View style={{ width: "80%" }}>
+            <Text style={[buttonStyles.textInsideButton, {color:"black"}]}>
+                {statusText} {downloadProgression > 0 ? `${Math.floor(downloadProgression)}%` : ""}
+            </Text>
+
+            <View style={{ height: 40, borderWidth: 0.5 }}>
+                <View style={{
+                backgroundColor: "#32CD34",
+                height: "100%",
+                width: `${downloadProgression}%`
+                }} />
+            </View>
+            </View>
         </View>
     )
 }
