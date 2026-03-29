@@ -1,10 +1,24 @@
 Fico feliz que tenha interesse em contribuir. Sabe, sempre quis ter um projeto open source com uma comunidade grande. As contribuições de todos os tamanhos são essenciais para a construção de um software robusto.
 
-## Ambiente de desenvolvimento
+---
 
-Esse projeto necessita de alguns PATH e váriaveis de ambientes. Todos os recursos necessários para executar o ambiente de desenvolvimento, estão dentro de commands/exports.txt.
+## Configuração de ambiente
 
-Dentro de commands/buildCommands.txt, 
+Instale dependências:
+
+```bash
+npm install
+```
+
+Esse projeto necessita de alguns PATH e váriaveis de ambientes. Todos os recursos necessários para executar o ambiente de desenvolvimento estão dentro de [./commands/exports.txt](./commands/exports.txt).
+
+---
+
+## Execução de ambiente
+
+Dentro de [./commands/buildCommands.txt](./commands/buildCommands.txt), tem anotações de comandos de build para copiar e colar rapidamente no terminal. Lembrando, que para executar o comando de Desenvolvimento, você precisará de um cabo USB com um dispositivo android conectado.
+
+## Pull Request
 
 1. Fork o projeto
 2. Crie uma branch (`git checkout -b feature/nova-feature`)  
