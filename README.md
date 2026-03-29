@@ -22,6 +22,13 @@ O diferencial principal é a capacidade de **baixar músicas diretamente a parti
 
 ---
 
+## Objetivo do projeto
+
+Este projeto foi desenvolvido como estudo, mas com foco em resolver um problema real do dia a dia:  
+ter um player simples que permita baixar e ouvir músicas offline sem complicação.
+
+---
+
 ## Funcionalidades
 
 - Reprodução de músicas  
@@ -56,13 +63,6 @@ Atualmente disponível apenas para:
 3. Acompanhe o progresso pela barra de carregamento  
 4. Após o download, a música aparecerá na tela inicial  
 5. Basta tocar e reproduzir
-
----
-
-## Objetivo do projeto
-
-Este projeto foi desenvolvido como estudo, mas com foco em resolver um problema real do dia a dia:  
-ter um player simples que permita baixar e ouvir músicas offline sem complicação.
 
 ---
 
