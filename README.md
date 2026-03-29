@@ -1,6 +1,6 @@
 ## 📥 Download
 
-[![Download Disquet](https://img.shields.io/badge/Download-Disquet-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/v0.5/disquet-0.5.apk)
+[![Download Disquet 64-bit](https://img.shields.io/badge/Download-Disquet%2064--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/v0.5/disquet-0.5.apk)
 
 # 🎵 Disquet
 
