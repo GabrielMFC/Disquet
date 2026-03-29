@@ -29,6 +29,7 @@ Atualmente eu estou usando uma nomenclatura bem simples de versionamento. Os pri
 ```
 
 Nesse exemplo, o disquet sofreu uma atualização grande representado pelo 1 no meio e a próxima atualização foi implementada parcialmente, representada pelo número 5. Quando o número do meio passa de 9, o primeiro número é incrementado em 1.
+
 ---
 
 ## Pull Request
