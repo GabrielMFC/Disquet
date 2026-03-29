@@ -67,36 +67,19 @@ class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
 
                 val lastStatusRef = mutableMapOf("status" to "")
 
-                val fastRequest = YoutubeDLRequest(url).apply {
+                sendEvent("downloadStatus", "Estabelecendo conexão...")
+
+                val safeRequest = YoutubeDLRequest(url).apply {
                     addOption("--no-playlist")
                     addOption("--extractor-args", "youtube:player_client=android,web")
                     addOption("--user-agent", "Mozilla/5.0")
-                    addOption("-f", "bestaudio[ext=m4a]/140")
+                    addOption("-f", "140/bestaudio/best")
+                    addOption("-x")
+                    addOption("--audio-format", "m4a")
                     addOption("-o", "$outputDir%(title)s.%(ext)s")
                 }
 
-                var filePath: String?
-
-                try {
-                    sendEvent("downloadStatus", "Tentando download rápido...")
-                    filePath = executeDownload(fastRequest, outputDir, lastStatusRef)
-                } catch (e: Exception) {
-
-                    android.util.Log.w("YtDlp", "Fallback ativado: ${e.message}")
-                    sendEvent("downloadStatus", "Tentando método alternativo...")
-
-                    val safeRequest = YoutubeDLRequest(url).apply {
-                        addOption("--no-playlist")
-                        addOption("--extractor-args", "youtube:player_client=android,web")
-                        addOption("--user-agent", "Mozilla/5.0")
-                        addOption("-f", "140/bestaudio/best")
-                        addOption("-x")
-                        addOption("--audio-format", "m4a")
-                        addOption("-o", "$outputDir%(title)s.%(ext)s")
-                    }
-
-                    filePath = executeDownload(safeRequest, outputDir, lastStatusRef)
-                }
+                val filePath = executeDownload(safeRequest, outputDir, lastStatusRef)
 
                 if (filePath != null) {
                     sendEvent("downloadComplete", filePath)
@@ -104,7 +87,6 @@ class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
                 } else {
                     promise.reject("ERROR", "Arquivo não encontrado")
                 }
-
             } catch (e: Exception) {
                 android.util.Log.e("YtDlp", "erro: ${e.message}")
                 promise.reject("ERROR", e.message)

@@ -1,13 +1,10 @@
-import DownloadPage from "@/src/pages/downloadPage";
-import Home from "@/src/pages/home";
-import { useState } from "react";
+import { View } from 'react-native';
+import Home from './home';
 
 export default function HomeScreen() {
-  const [selectedPage, setSelectedPage] = useState("")
-  
   return (
-    <>  
-      {selectedPage === "download" ? <DownloadPage/> : <Home/>}
-    </>
-  );
+      <View style={{flex:1}}>
+        <Home/>
+      </View>
+    )
 }

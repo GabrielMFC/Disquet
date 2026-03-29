@@ -61,12 +61,7 @@
           "enableFileSharing": true
         }
       ],
-      [
-        "expo-audio",
-        {
-          "enableBackgroundPlayback": true
-        }
-      ],
+      
       "expo-asset",
       "expo-font",
       "expo-web-browser"

@@ -1,3 +1,5 @@
+# Aqui contém algumas das váriaveis de ambiente que são necessárias para executar a SDK do android.
+#
 # ================================
 # JAVA (SDKMAN - força usar Java 17)
 # ================================
