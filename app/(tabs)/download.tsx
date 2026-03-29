@@ -37,7 +37,7 @@ export default function DownloadPage() {
             setBlockDownloadButton(false);
             Alert.alert("Sua música foi baixada!");
             await refreshMp3Files()
-            setIsDownloading(false)
+            setIsDownloading(false);
         });
 
         return () => {
