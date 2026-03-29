@@ -10,13 +10,13 @@ Instale dependências:
 npm install
 ```
 
-Esse projeto necessita de alguns PATH e váriaveis de ambientes. Todos os recursos necessários para executar o ambiente de desenvolvimento estão dentro de [./commands/exports.txt](./commands/exports.txt).
+Esse projeto necessita de alguns PATH e váriaveis de ambientes. Todos os recursos necessários para executar o ambiente de desenvolvimento estão dentro de [../commands/exports.txt](../commands/exports.txt).
 
 ---
 
 ## Execução de ambiente
 
-Dentro de [./commands/buildCommands.txt](./commands/buildCommands.txt), tem anotações de comandos de build para copiar e colar rapidamente no terminal. Lembrando, que para executar o comando de Desenvolvimento, você precisará de um cabo USB com um dispositivo android conectado.
+Dentro de [.,/commands/buildCommands.txt](../commands/buildCommands.txt), tem anotações de comandos de build para copiar e colar rapidamente no terminal. Lembrando, que para executar o comando de Desenvolvimento, você precisará de um cabo USB com um dispositivo android conectado.
 
 ## Pull Request
 
