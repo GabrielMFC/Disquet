@@ -1,3 +1,7 @@
+## 📥 Download
+
+[⬇️ Baixar APK]https://github.com/GabrielMFC/Disquet/releases/tag/v0.5)
+
 # 🎵 Disquet
 
 O **Disquet** é um player de música simples, gratuito e focado em resolver um problema direto: baixar músicas e reproduzi-las offline de forma rápida e prática.
