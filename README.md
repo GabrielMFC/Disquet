@@ -5,6 +5,7 @@
 Para dispositivos antigos:
 
 [![Download Disquet v0.5 32-bit](https://img.shields.io/badge/Download-Disquet%20v0.5%2032--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/v0.5/disquet-0.5-arch32bits.apk)
+
 ---
 
 # 🎵 Disquet
