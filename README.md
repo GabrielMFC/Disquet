@@ -1,6 +1,6 @@
 ## 📥 Download
 
-[⬇️ Baixar APK]https://github.com/GabrielMFC/Disquet/releases/tag/v0.5)
+[⬇️ Baixar APK](https://github.com/GabrielMFC/Disquet/releases/download/v0.5/disquet-0.5.apk)
 
 # 🎵 Disquet
 
