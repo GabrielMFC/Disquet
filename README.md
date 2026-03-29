@@ -8,13 +8,13 @@ Para dispositivos antigos:
 
 ---
 
-# 🎵 Disquet
+# Disquet
 
 O **Disquet** é um player de música simples, gratuito e focado em resolver um problema direto: baixar músicas e reproduzi-las offline de forma rápida e prática.
 
 ---
 
-## 🧠 Sobre o projeto
+## Sobre o projeto
 
 O objetivo do Disquet é ser um player leve e funcional, sem complexidade desnecessária.
 
@@ -22,60 +22,60 @@ O diferencial principal é a capacidade de **baixar músicas diretamente a parti
 
 ---
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
-- ▶️ Reprodução de músicas  
-- ⏸️ Pausar músicas  
-- 🔊 Reprodução em segundo plano  
-- ⬇️ Download de músicas via link  
-- 📊 Barra de progresso durante o download  
+- Reprodução de músicas  
+- Pausar músicas  
+- Reprodução em segundo plano  
+- Download de músicas via link  
+- Barra de progresso durante o download  
 
-## 🛠️ Tecnologias utilizadas
+## Tecnologias utilizadas
 
 - **React Native**
 - **TypeScript**
 - **Kotlin**
 - **Android SDK CLI**
 
-📌 Todo o processamento é feito localmente (sem backend).
+Todo o processamento é feito localmente (sem backend).
 
 ---
 
-## 📱 Plataforma
+## Plataforma
 
 Atualmente disponível apenas para:
 
-- 🤖 Android
+- Android
 
 ---
 
-## ▶️ Como usar
+## Como usar
 
 1. Cole o link da música no campo de download  
 2. Clique em **baixar**  
 3. Acompanhe o progresso pela barra de carregamento  
 4. Após o download, a música aparecerá na tela inicial  
-5. Basta tocar e reproduzir 🎧  
+5. Basta tocar e reproduzir
 
 ---
 
-## 🎯 Objetivo do projeto
+## Objetivo do projeto
 
 Este projeto foi desenvolvido como estudo, mas com foco em resolver um problema real do dia a dia:  
 ter um player simples que permita baixar e ouvir músicas offline sem complicação.
 
 ---
 
-## 💡 Ideias futuras
+## Ideias futuras
 
-- ⬇️ Downloads em segundo plano  
-- ⚡ Múltiplos downloads simultâneos  
-- 🎧 Criação de playlists  
-- 📂 Melhor organização da biblioteca  
+- Downloads em segundo plano  
+- Múltiplos downloads simultâneos  
+- Criação de playlists  
+- Melhor organização da biblioteca  
 
 ---
 
-## 🤝 Contribuição
+## Contribuição
 
 Contribuições são bem-vindas!
 
@@ -86,10 +86,6 @@ Contribuições são bem-vindas!
 5. Abra um Pull Request  
 
 ---
-
-## 📄 Licença
-
-Ainda não definida.
 
 ícones usados:
 
