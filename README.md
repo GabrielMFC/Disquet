@@ -65,7 +65,7 @@ Atualmente disponível apenas para:
 5. Basta tocar e reproduzir
 
 
-![Gif de demonstração](./assets/disquetDemo.gif)
+![Gif de demonstração](./assets/disquetDemoCompressed.gif)
 
 
 ---
