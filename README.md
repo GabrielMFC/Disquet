@@ -64,7 +64,9 @@ Atualmente disponível apenas para:
 4. Após o download, a música aparecerá na tela inicial  
 5. Basta tocar e reproduzir
 
+
 ![Gif de demonstração](./assets/disquetDemo.gif)
+
 
 ---
 
