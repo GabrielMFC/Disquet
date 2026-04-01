@@ -7,7 +7,10 @@ import com.facebook.react.uimanager.ViewManager
 
 class YtDlpPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-        return listOf(YtDlpModule(reactContext))
+        return listOf(
+            YtDlpModule(reactContext),
+            StorageModule(reactContext)
+        )
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {

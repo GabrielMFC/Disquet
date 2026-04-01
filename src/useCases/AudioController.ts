@@ -1,23 +1,15 @@
-import * as FileSystem from "expo-file-system/legacy";
 import { NativeModules } from "react-native";
 import TrackPlayer from "react-native-track-player";
 const {YtDlp} = NativeModules
+const {StorageModule} = NativeModules
 
 export default class AudioController {
     async getMp3FilesList() {
         try {
-            const folder = `${FileSystem.documentDirectory}disquet/`;
-        
-            const dirInfo = await FileSystem.getInfoAsync(folder);
-            if (!dirInfo.exists) {
-                return [];
-            }
-        
-            const files = await FileSystem.readDirectoryAsync(folder);
-        
+            const files = await StorageModule.getFiles() as string[]
             const mp3Files = files
                 .filter(file => file.toLowerCase())
-                .map(file => `${folder}${file}`);
+                .map(file => `${file}`);
     
         return mp3Files;
         } catch (error) {

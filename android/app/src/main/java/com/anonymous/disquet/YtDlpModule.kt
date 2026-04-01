@@ -4,6 +4,7 @@ import com.facebook.react.bridge.*
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLRequest
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import android.os.Environment
 import java.io.File
 
 class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -61,7 +62,7 @@ class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
     fun download(url: String, promise: Promise) {
         Thread {
             try {
-                val outputDir = reactApplicationContext.filesDir.absolutePath + "/disquet/"
+                val outputDir = Environment.getExternalStorageDirectory().absolutePath + "/Disquet/"
                 val dir = File(outputDir)
                 if (!dir.exists()) dir.mkdirs()
 
