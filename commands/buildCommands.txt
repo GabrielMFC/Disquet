@@ -4,7 +4,7 @@ Desenvolvimento:
 
 Compilação pra apk:
 
-- eas build --platform android --profile production --local --output ./build/disquet-0.6.apk
+ eas build --platform android --profile production --local --output ./build/disquet-0.6.apk
 
 Para dispositivos com arquitetura 32 bits:
-- eas build --platform android --profile production --local --output ./build/disquet-0.6-arch32bits.apk
+ eas build --platform android --profile production --local --output ./build/disquet-0.6-arch32bits.apk
