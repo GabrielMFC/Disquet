@@ -1,6 +1,6 @@
 Desenvolvimento:
 
-- npx expo run:android --device
+ npx expo run:android --device
 
 Compilação pra apk:
 
