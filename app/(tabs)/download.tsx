@@ -10,9 +10,9 @@ export default function DownloadPage() {
     const [url, setUrl] = useState('')
     const [blockDownloadButton, setBlockDownloadButton] = useState(false)
     const [mp3Files, setMp3Files] = useState<string[]>([])
-    const [downloadProgression, setDownloadProgression] = useState(0)
+    const {downloadProgression, setDownloadProgression} = useAppContext()
     const [statusText, setStatusText] = useState("")
-    const [isDownloading, setIsDownloading] = useState(false)
+    const {isDownloading, setIsDownloading} = useAppContext()
     const {refreshMp3Files} = useAppContext()
 
     const { YtDlp } = NativeModules;
@@ -24,7 +24,7 @@ export default function DownloadPage() {
             const p = Number(progress);
             if (p < 0) return;
 
-            setDownloadProgression(prev => Math.max(prev, p));
+            setDownloadProgression((prev: number) => Math.max(prev, p));
         });
 
         const statusSub = emitter.addListener("downloadStatus", (text) => {
@@ -54,6 +54,7 @@ export default function DownloadPage() {
             placeholder="Cole o link da música..."
             value={url}
             onChangeText={setUrl}
+            placeholderTextColor="gray"
         />
         <Pressable
             style={[buttonStyles.button, !blockDownloadButton ? buttonStyles.downloadButon : buttonStyles.disableButton, {width: "90%"}]}

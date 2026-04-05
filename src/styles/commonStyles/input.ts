@@ -4,12 +4,14 @@ const inputStyles = StyleSheet.create({
     input: {
         width: "90%",
         height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: "#ffffff00",
+        borderWidth: 0,
+        borderBottomWidth: 1,
         marginBottom: 15,
         paddingHorizontal: 10,
         borderRadius: 5,
-        color: "black"
+        color: "black",
     }
 })
 

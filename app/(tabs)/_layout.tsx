@@ -72,6 +72,7 @@ function RootLayout() {
                     >
                         <Tabs.Screen name="index" />
                         <Tabs.Screen name="download" />
+                        <Tabs.Screen name='search' /> 
                     </Tabs>
                     <BottomBar />
                 </View>

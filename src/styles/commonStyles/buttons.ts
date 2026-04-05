@@ -3,13 +3,13 @@ import { StyleSheet } from "react-native";
 const buttonStyles = StyleSheet.create({
     button: {
         textAlign: "center",
-        backgroundColor: "#2196F3",
+        backgroundColor: "#0E5089",
         borderRadius: 5,
         padding: "5%",
         margin: "5%"
     },
     downloadButon: {
-        backgroundColor: "#075fa7"
+        backgroundColor: "#0E5089"
     },
     disableButton: {
         backgroundColor: "#808080"

@@ -20,6 +20,15 @@ export default function BottomBar(props: any) {
         <Image style={{ width: 32, height: 32 }} source={require("../../../assets/icons/home.png")} />
       </Pressable>
       <Pressable
+        onPress={() => router.push("/search")}
+        style={[buttonStyles.button, centralizeFlex.containerFlex, { height: "80%" },
+          pathname === "/search" ? { backgroundColor: "gray" } : {}
+        ]}
+      >
+        <Image style={{ width: 32, height: 32 }} source={require("../../../assets/icons/search.png")} />
+      </Pressable>
+
+      <Pressable
         onPress={() => router.push("/download")}
         style={[buttonStyles.button, centralizeFlex.containerFlex, { height: "80%" },
           pathname === "/download" ? { backgroundColor: "gray" } : {}

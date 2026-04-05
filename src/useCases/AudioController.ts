@@ -1,4 +1,4 @@
-import { NativeModules } from "react-native";
+import { Alert, NativeModules } from "react-native";
 import TrackPlayer from "react-native-track-player";
 const {YtDlp} = NativeModules
 const {StorageModule} = NativeModules
@@ -25,6 +25,7 @@ export default class AudioController {
 
     async downloadAudio(url: string) {
         try {
+            Alert.alert("Download iniciado!")
             await YtDlp.download(url);
         } catch (e) {
             console.log("Erro original:", e);

@@ -23,7 +23,7 @@ export default function Home() {
         <View style={styles.homeContainer}>
             <Pressable onPress={() => audioController.playAllMusics(mp3Files)} 
             style={[buttonStyles.button, centralizeFlex.containerFlex,
-            {backgroundColor:"#0E5089",marginTop: "15%", height:60, width:"90%"}]}>
+            {marginTop: "15%", height:60, width:"90%"}]}>
                 <Text style={buttonStyles.textInsideButton}>Reproduzir tudo</Text>
             </Pressable>
             <FlatList 
@@ -34,7 +34,7 @@ export default function Home() {
               renderItem={({ item }) => (
                 <View  style={[centralizeFlex.containerFlex,{marginBottom:"5%",width: '80%',flexDirection:"row" }]}>
                   <Pressable
-                    style={[buttonStyles.button, {margin: "0%",flex:1, alignSelf:"stretch"}]}
+                    style={[buttonStyles.button, {margin: "0%",flex:1, alignSelf:"stretch", backgroundColor: "#2196F3"}]}
                     onPress={() => {
                       audioController.setLockScreen(item, item.split("/").pop() as string)
                       audioController.play()

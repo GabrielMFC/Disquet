@@ -9,7 +9,8 @@ class YtDlpPackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
         return listOf(
             YtDlpModule(reactContext),
-            StorageModule(reactContext)
+            StorageModule(reactContext),
+            YoutubeSearchModule(reactContext)
         )
     }
 

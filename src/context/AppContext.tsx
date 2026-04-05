@@ -5,6 +5,8 @@ const AppContext = createContext<any>("")
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [mp3Files, setMp3Files] = useState<string[]>([])
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [downloadProgression, setDownloadProgression] = useState(0)
   const audioController = new AudioController()
 
   const refreshMp3Files = async () => {
@@ -17,7 +19,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AppContext.Provider value={{ mp3Files, refreshMp3Files }}>
+    <AppContext.Provider value={{ mp3Files, refreshMp3Files, isDownloading, setIsDownloading, downloadProgression, setDownloadProgression }}>
       {children}
     </AppContext.Provider>
   );
