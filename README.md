@@ -14,14 +14,6 @@ O **Disquet** é um player de música simples, gratuito e focado em resolver um 
 
 ---
 
-## Sobre o projeto
-
-O objetivo do Disquet é ser um player leve e funcional, sem complexidade desnecessária.
-
-O diferencial principal é a capacidade de **baixar músicas diretamente a partir de links (como YouTube)** e já disponibilizá-las automaticamente para reprodução offline dentro do app.
-
----
-
 ## Objetivo do projeto
 
 Este projeto foi desenvolvido como estudo, mas com foco em resolver um problema real do dia a dia:  
@@ -34,7 +26,8 @@ ter um player simples que permita baixar e ouvir músicas offline sem complicaç
 - Reprodução de músicas  
 - Pausar músicas  
 - Reprodução em segundo plano  
-- Download de músicas via link  
+- Download de músicas via link
+- Pesquisar músicas dentro do app
 - Barra de progresso durante o download  
 
 ## Tecnologias utilizadas
@@ -58,28 +51,29 @@ Atualmente disponível apenas para:
 
 ## Como usar
 
-1. Cole o link da música no campo de download  
-2. Clique em **baixar**  
-3. Acompanhe o progresso pela barra de carregamento  
-4. Após o download, a música aparecerá na tela inicial  
-5. Basta tocar e reproduzir
+### Pesquise e baixe.
+
+Pesquise a música que você deseja baixar. Quando a pesquisa for finalizada, aparecerá 10 resultados.
 
 
-![Gif de demonstração](./assets/disquetDemoCompressed.gif)
+![Gif de demonstração do download](./assets/readMeAssets/disquetDownloadDemo.gif)
+
+Por enquanto pode haver somente um download por vez e qualquer tentativa de baixar mais de uma música, será barrada pelo disquet.
+
+Quando o disquet é iniciado pela primeira vez, ele cria uma pasta na raíz do armazenamento do seu dispositivo. Todas as músicas baixadas através do disquet serão salvas nessa pasta, caso você tenha uma música que foi baixada de outra forma, você pode mover o arquivo para essa pasta e o disquet vai poder exibir ela junto com as demais músicas salvas na página home.
+
+![Imagem de storage](./assets/readMeAssets/storagePrint.jpeg)
 
 
+### Clique e reproduza
+
+Na página de home(representada por um ícone de casa) aparecerá todas as músicas que você baixou através do disquet.
+
+
+![Gif de demonstração da reprodução](./assets/readMeAssets/disquetPlayDemo.gif)
 ---
 
-## Ideias futuras
-
-- Downloads em segundo plano  
-- Múltiplos downloads simultâneos  
-- Criação de playlists  
-- Melhor organização da biblioteca  
-
----
-
-## Contribuição
+## Guia de contribuição
 
 [Guia de contribuição](./docs/CONTRIBUTING.md)
 
@@ -87,6 +81,8 @@ Atualmente disponível apenas para:
 
 ## Ícones usados:
 
-download: https://www.flaticon.com/free-icon/downloads_7268609?term=download&page=1&position=2&origin=search&related_id=7268609
-
 home: https://www.flaticon.com/free-icon/home_1946436?term=home&page=1&position=4&origin=search&related_id=1946436
+
+search: https://www.flaticon.com/free-icon/magnifying-glass_151773?term=search&page=1&position=3&origin=search&related_id=151773
+
+download: https://www.flaticon.com/free-icon/downloads_7268609?term=download&page=1&position=2&origin=search&related_id=7268609
