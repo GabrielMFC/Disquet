@@ -62,9 +62,6 @@ Por enquanto pode haver somente um download por vez e qualquer tentativa de baix
 
 Quando o disquet é iniciado pela primeira vez, ele cria uma pasta na raíz do armazenamento do seu dispositivo. Todas as músicas baixadas através do disquet serão salvas nessa pasta, caso você tenha uma música que foi baixada de outra forma, você pode mover o arquivo para essa pasta e o disquet vai poder exibir ela junto com as demais músicas salvas na página home.
 
-![Imagem de storage](./assets/readMeAssets/storagePrint.jpeg)
-
-
 ### Clique e reproduza
 
 Na página de home(representada por um ícone de casa) aparecerá todas as músicas que você baixou através do disquet.
