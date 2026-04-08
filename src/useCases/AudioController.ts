@@ -4,7 +4,7 @@ const {YtDlp} = NativeModules
 const {StorageModule} = NativeModules
 
 export default class AudioController {
-    async getMp3FilesList() {
+    public async getMp3FilesList() {
         try {
             const files = await StorageModule.getFiles() as string[]
             const mp3Files = files
@@ -18,12 +18,12 @@ export default class AudioController {
         }
     }
 
-    async setLockScreen(uri: string, artist: string) {
+    public async setLockScreen(uri: string, artist: string) {
         await TrackPlayer.reset()
         await TrackPlayer.add({url: uri, title: "Disquet", artist: artist})
     }
 
-    async downloadAudio(url: string) {
+    public async downloadAudio(url: string) {
         try {
             Alert.alert("Download iniciado!")
             await YtDlp.download(url);
@@ -33,11 +33,35 @@ export default class AudioController {
         }
     }
 
-    async play() {
+    public async play() {
         await TrackPlayer.play()
     }
 
-    async playAllMusics(musicsList: string[]) {
+    private shuffle(array: string[]) {
+        const arr = [...array]
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[arr[i], arr[j]] = [arr[j], arr[i]]
+        }
+        return arr
+    }
+
+    public async playAllMusicsRandomly(musicsList: string[]) {
+        await TrackPlayer.reset()
+
+        const shuffledList = this.shuffle(musicsList)
+
+        for (let i = 0; i < shuffledList.length; i++) {
+            await TrackPlayer.add([{
+                id: i,
+                url: shuffledList[i]
+            }])
+        }
+
+        await TrackPlayer.play()
+    }
+
+    public async playAllMusics(musicsList: string[]) {
         await TrackPlayer.reset()
         let i
         for(i = 0; i < musicsList.length; i++){

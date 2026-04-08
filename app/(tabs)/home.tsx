@@ -26,6 +26,13 @@ export default function Home() {
             {marginTop: "15%", height:60, width:"90%"}]}>
                 <Text style={buttonStyles.textInsideButton}>Reproduzir tudo</Text>
             </Pressable>
+
+            <Pressable onPress={() => audioController.playAllMusicsRandomly(mp3Files)} 
+            style={[buttonStyles.button, centralizeFlex.containerFlex,
+            {marginTop: "0.5%", height:60, width:"90%"}]}>
+                <Text style={buttonStyles.textInsideButton}>Reproduzir aleatoriamente</Text>
+            </Pressable>
+
             <FlatList 
               style={{width: "100%"}}
               contentContainerStyle={[centralizeFlex.containerFlex,{padding:0,paddingBottom: 200}]}

@@ -1,10 +1,10 @@
 ## Download
 
-[![Download Disquet v0.7 64-bit](https://img.shields.io/badge/Download-Disquet%20v0.7%2064--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/0.7/disquet-0.7.apk)
+[![Download Disquet v0.8 64-bit](https://img.shields.io/badge/Download-Disquet%20v0.8%2064--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/0.8/disquet-0.8.apk)
 
 Para dispositivos antigos:
 
-[![Download Disquet v0.7 32-bit](https://img.shields.io/badge/Download-Disquet%20v0.7%2032--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/0.7/disquet-0.7-arch32bits.apk)
+[![Download Disquet v0.8 32-bit](https://img.shields.io/badge/Download-Disquet%20v0.8%2032--bit-green?style=for-the-badge&logo=android)](https://github.com/GabrielMFC/Disquet/releases/download/0.8/disquet-0.8-arch32bits.apk)
 
 ---
 
