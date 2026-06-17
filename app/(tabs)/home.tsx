@@ -3,8 +3,9 @@ import { buttonStyles } from "@/src/styles/commonStyles/buttons";
 import { centralizeFlex } from "@/src/styles/commonStyles/centralizeFlex";
 import AudioController from "@/src/useCases/AudioController";
 import * as FileSystem from "expo-file-system/legacy";
+import { router } from "expo-router";
 import { useEffect } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { styles } from "../../src/styles/pagesStyles/homeStyles";
 
 export default function Home() {
@@ -21,17 +22,23 @@ export default function Home() {
     
     return (
         <View style={styles.homeContainer}>
-            <Pressable onPress={() => audioController.playAllMusics(mp3Files)} 
-            style={[buttonStyles.button, centralizeFlex.containerFlex,
-            {marginTop: "15%", height:60, width:"90%"}]}>
-                <Text style={buttonStyles.textInsideButton}>Reproduzir tudo</Text>
-            </Pressable>
-
-            <Pressable onPress={() => audioController.playAllMusicsRandomly(mp3Files)} 
-            style={[buttonStyles.button, centralizeFlex.containerFlex,
-            {marginTop: "0.5%", height:60, width:"90%"}]}>
-                <Text style={buttonStyles.textInsideButton}>Reproduzir aleatoriamente</Text>
-            </Pressable>
+            <View style={styles.playContainer}>
+              <Pressable onPress={() => audioController.playAllMusics(mp3Files)}
+              style={[buttonStyles.button, centralizeFlex.containerFlex,
+              {marginTop: "10%"}]}>
+                <Image style={{ width: 32, height: 32 }} source={require("../../assets/icons/play.png")}/>
+              </Pressable>
+              <Pressable onPress={() => audioController.playAllMusicsRandomly(mp3Files)}
+              style={[buttonStyles.button, centralizeFlex.containerFlex,
+              {marginTop: "0.5%"}]}>
+                <Image style={{ width: 32, height: 32 }} source={require("../../assets/icons/playrandom.png")}/>
+              </Pressable>
+              <Pressable onPress={() => router.push("/(tabs)/playLists")}
+              style={[buttonStyles.button, centralizeFlex.containerFlex,
+              {marginTop: "0.5%"}]}>
+                <Image style={{ width: 32, height: 32 }} source={require("../../assets/icons/playlist.png")}/>
+              </Pressable>
+            </View>
 
             <FlatList 
               style={{width: "100%"}}
@@ -52,8 +59,8 @@ export default function Home() {
                     </Text>
                   </Pressable>
                 </View>
-            )}
-          />
+            )}/>
+            
         </View>
     )
 }

@@ -4,7 +4,7 @@ const buttonStyles = StyleSheet.create({
     button: {
         textAlign: "center",
         backgroundColor: "#0E5089",
-        borderRadius: 5,
+        borderRadius: 50,
         padding: "5%",
         margin: "5%"
     },

@@ -46,7 +46,7 @@ function RootLayout() {
                     return
                 }
             }
-            const path = await NativeModules.StorageModule.getOrCreate()
+            const path = await NativeModules.StorageModule.getOrCreate(null)
         }
 
         init()

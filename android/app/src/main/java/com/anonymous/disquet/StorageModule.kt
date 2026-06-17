@@ -31,6 +31,25 @@ class StorageModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun getDirs(promise: Promise) {
+        if (!dir.exists() || !dir.isDirectory) {
+            promise.reject("ERROR", "Pasta Disquet não encontrada")
+            return
+        }
+
+        val array = com.facebook.react.bridge.Arguments.createArray()
+
+        dir.listFiles()
+            ?.filter { it.isDirectory }
+            ?.forEach { file ->
+                array.pushString(file.absolutePath)
+            }
+
+        promise.resolve(array)
+    }
+
+
+    @ReactMethod
     fun openManagePermissionSettings(promise: Promise) {
         try {
             val intent = Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
@@ -53,11 +72,23 @@ class StorageModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun getOrCreate(promise: Promise) {
-        val result = if (dir.exists() || dir.mkdirs()) dir else null
-        if (result != null) promise.resolve(result.absolutePath)
-        else promise.reject("ERROR", "Não foi possível criar a pasta Disquet")
+    fun getOrCreate(folderName: String?, promise: Promise) {
+        val name = folderName ?: FOLDER_NAME
+        val base = File(Environment.getExternalStorageDirectory(), FOLDER_NAME)
+
+        if(folderName == null && base.exists()){
+            return
+        }
+
+        val dir = File(base, folderName)
+
+        if (dir.exists() || dir.mkdirs()) {
+            promise.resolve(dir.absolutePath)
+        } else {
+            promise.reject("ERROR", "Falha ao criar ${dir.absolutePath}.")
+        }
     }
+
 
     @ReactMethod
     fun exists(promise: Promise) {
