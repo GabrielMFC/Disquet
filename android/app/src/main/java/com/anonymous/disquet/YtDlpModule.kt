@@ -77,6 +77,10 @@ class YtDlpModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
                     addOption("-f", "140/bestaudio/best")
                     addOption("-x")
                     addOption("--audio-format", "m4a")
+
+                    addOption("--embed-thumbnail")
+                    addOption("--embed-metadata")
+
                     addOption("-o", "$outputDir%(title)s.%(ext)s")
                 }
 
