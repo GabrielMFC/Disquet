@@ -16,7 +16,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
-        flexWrap: "wrap"
+        marginTop: 12,
+        marginBottom: 8,
+    },
+    smallButton: {
+        padding: 8,
+        margin: 6,
     }
 })
 
