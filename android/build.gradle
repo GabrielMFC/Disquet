@@ -22,3 +22,13 @@ allprojects {
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
+
+def linkLibcxx = new File(rootDir, "link-libcxx.cmake").absolutePath.replace("\\", "/")
+
+subprojects { subproject ->
+  subproject.pluginManager.withPlugin("com.android.library") {
+    subproject.android.defaultConfig.externalNativeBuild.cmake {
+      arguments "-DCMAKE_PROJECT_INCLUDE=${linkLibcxx}"
+    }
+  }
+}
