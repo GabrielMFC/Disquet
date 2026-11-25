@@ -74,6 +74,35 @@ class StorageModule(
         }
     }
 
+
+    @ReactMethod
+    fun getFilesFromDir(folderPath: String, promise: Promise) {
+        try {
+            val baseDir = dir.canonicalFile
+            val targetDir = File(folderPath).canonicalFile
+
+            if (targetDir.parentFile != baseDir || !targetDir.isDirectory) {
+            promise.reject("INVALID_PATH", "Playlist inválida.")
+            return
+        }
+
+            val array = Arguments.createArray()
+
+            targetDir.listFiles()
+                ?.filter { it.isFile }
+                ?.forEach { file ->
+                array.pushString(file.absolutePath)
+                }
+
+            promise.resolve(array)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Erro ao listar músicas da playlist", e)
+            promise.reject("ERROR", e.message, e)
+        }
+    }
+
+
     @ReactMethod
     fun deleteFile(filePath: String, promise: Promise) {
         try {
@@ -184,6 +213,50 @@ class StorageModule(
             promise.resolve(null)
         }
     }
+
+
+    @ReactMethod
+    fun moveFile(filePath: String, destinationDirPath: String, promise: Promise) {
+        try {
+            val baseDir = dir.canonicalFile
+            val source = File(filePath).canonicalFile
+            val destinationDir = File(destinationDirPath).canonicalFile
+
+            // Só permite mover músicas que estão diretamente na pasta Disquet.
+            if (source.parentFile != baseDir) {
+                promise.reject("INVALID_SOURCE", "Arquivo fora da pasta principal.")
+                return
+            }
+
+            // Só permite mover para uma playlist diretamente dentro de Disquet.
+            if (destinationDir.parentFile != baseDir || !destinationDir.isDirectory) {
+                promise.reject("INVALID_DESTINATION", "Playlist inválida.")
+                return
+            }
+
+            if (!source.exists() || !source.isFile) {
+                promise.reject("NOT_FOUND", "Arquivo não encontrado.")
+                return
+            }
+
+            val destination = File(destinationDir, source.name)
+
+            if (destination.exists()) {
+                promise.reject("FILE_EXISTS", "Essa música já existe na playlist.")
+                return
+            }
+
+            if (source.renameTo(destination)) {
+                promise.resolve(true)
+            } else {
+                promise.reject("MOVE_ERROR", "Não foi possível mover a música.")
+            }
+
+        } catch (e: Exception) {
+            promise.reject("ERROR", e.message, e)
+        }
+    }
+        
 
     companion object {
         private const val FOLDER_NAME = "Disquet"
