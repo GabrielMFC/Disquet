@@ -1,5 +1,4 @@
 
-
 import { useAppContext } from "@/src/context/AppContext";
 import { buttonStyles } from "@/src/styles/commonStyles/buttons";
 import { centralizeFlex } from "@/src/styles/commonStyles/centralizeFlex";
@@ -53,15 +52,11 @@ export default function Home() {
 
       if (deleted) {
         await refreshMp3Files();
-
         setMenuVisible(false);
         setSelectedMusic(null);
       }
     } catch (error) {
-      Alert.alert(
-        "Erro",
-        "Não foi possível excluir essa música."
-      );
+      Alert.alert("Erro", "Não foi possível excluir essa música.");
     }
   };
 
@@ -121,24 +116,25 @@ export default function Home() {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View
-            style={[
-              centralizeFlex.containerFlex,
-              {
-                marginBottom: "5%",
-                width: "80%",
-                flexDirection: "row",
-                gap: 5
-              }
-            ]}
+            style={{
+              width: "80%",
+              marginBottom: "5%",
+              flexDirection: "row",
+              alignItems: "stretch",
+              backgroundColor: "#2196F3",
+              borderRadius: 8,
+              overflow: "hidden"
+            }}
           >
+            {/* Área clicável da música */}
             <Pressable
               style={[
                 buttonStyles.button,
                 {
-                  margin: "0%",
                   flex: 1,
-                  alignSelf: "stretch",
-                  backgroundColor: "#2196F3"
+                  margin: 0,
+                  backgroundColor: "transparent",
+                  borderRadius: 0
                 }
               ]}
               onPress={() => {
@@ -155,11 +151,11 @@ export default function Home() {
               </Text>
             </Pressable>
 
+            {/* Botão de opções dentro do card */}
             <Pressable
               style={{
                 width: 45,
                 backgroundColor: "#123B65",
-                borderRadius: 8,
                 alignItems: "center",
                 justifyContent: "center"
               }}
@@ -188,15 +184,25 @@ export default function Home() {
         animationType="fade"
         onRequestClose={() => setMenuVisible(false)}
       >
-        <Pressable
+        <View
           style={{
             flex: 1,
             backgroundColor: "rgba(0,0,0,0.6)",
             justifyContent: "center",
             alignItems: "center"
           }}
-          onPress={() => setMenuVisible(false)}
         >
+          <Pressable
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0
+            }}
+            onPress={() => setMenuVisible(false)}
+          />
+
           <View
             style={{
               width: "75%",
@@ -236,7 +242,7 @@ export default function Home() {
               </Text>
             </Pressable>
           </View>
-        </Pressable>
+        </View>
       </Modal>
     </View>
   );
