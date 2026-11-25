@@ -22,6 +22,10 @@ class StorageModule(
     private val dir: File
         get() = File(Environment.getExternalStorageDirectory(), FOLDER_NAME)
 
+    private fun isInsideBase(file: File, base: File): Boolean {
+        return file.path.startsWith(base.path + File.separator)
+    }
+
     @ReactMethod
     fun getFiles(promise: Promise) {
         try {
@@ -74,24 +78,23 @@ class StorageModule(
         }
     }
 
-
     @ReactMethod
     fun getFilesFromDir(folderPath: String, promise: Promise) {
         try {
             val baseDir = dir.canonicalFile
             val targetDir = File(folderPath).canonicalFile
 
-            if (targetDir.parentFile != baseDir || !targetDir.isDirectory) {
-            promise.reject("INVALID_PATH", "Playlist inválida.")
-            return
-        }
+            if (!isInsideBase(targetDir, baseDir) || !targetDir.isDirectory) {
+                promise.reject("INVALID_PATH", "Playlist inválida.")
+                return
+            }
 
             val array = Arguments.createArray()
 
             targetDir.listFiles()
                 ?.filter { it.isFile }
                 ?.forEach { file ->
-                array.pushString(file.absolutePath)
+                    array.pushString(file.absolutePath)
                 }
 
             promise.resolve(array)
@@ -102,15 +105,13 @@ class StorageModule(
         }
     }
 
-
     @ReactMethod
     fun deleteFile(filePath: String, promise: Promise) {
         try {
-            val originalFile = File(filePath)
-            val file = originalFile.canonicalFile
+            val file = File(filePath).canonicalFile
             val baseDir = dir.canonicalFile
 
-            if (!file.path.startsWith(baseDir.path + File.separator)) {
+            if (!isInsideBase(file, baseDir)) {
                 promise.reject("INVALID_PATH", "Arquivo fora da pasta Disquet.")
                 return
             }
@@ -132,9 +133,11 @@ class StorageModule(
             }
 
         } catch (e: Exception) {
+            Log.e(TAG, "Erro ao excluir arquivo", e)
             promise.reject("ERROR", e.message, e)
         }
     }
+
     @ReactMethod
     fun openManagePermissionSettings(promise: Promise) {
         try {
@@ -179,7 +182,7 @@ class StorageModule(
 
             if (
                 target != base.canonicalFile &&
-                !target.path.startsWith(base.canonicalPath + File.separator)
+                !isInsideBase(target, base.canonicalFile)
             ) {
                 promise.reject("INVALID_PATH", "Nome de pasta inválido.")
                 return
@@ -214,23 +217,35 @@ class StorageModule(
         }
     }
 
-
     @ReactMethod
-    fun moveFile(filePath: String, destinationDirPath: String, promise: Promise) {
+    fun moveFile(
+        filePath: String,
+        destinationDirPath: String,
+        promise: Promise
+    ) {
         try {
             val baseDir = dir.canonicalFile
             val source = File(filePath).canonicalFile
             val destinationDir = File(destinationDirPath).canonicalFile
 
-            // Só permite mover músicas que estão diretamente na pasta Disquet.
-            if (source.parentFile != baseDir) {
-                promise.reject("INVALID_SOURCE", "Arquivo fora da pasta principal.")
+            // A origem pode estar em qualquer subpasta do Disquet.
+            if (!isInsideBase(source, baseDir)) {
+                promise.reject(
+                    "INVALID_SOURCE",
+                    "Arquivo fora da pasta Disquet."
+                )
                 return
             }
 
-            // Só permite mover para uma playlist diretamente dentro de Disquet.
-            if (destinationDir.parentFile != baseDir || !destinationDir.isDirectory) {
-                promise.reject("INVALID_DESTINATION", "Playlist inválida.")
+            // O destino pode ser a pasta principal ou qualquer subpasta interna.
+            if (
+                destinationDir != baseDir &&
+                !isInsideBase(destinationDir, baseDir)
+            ) {
+                promise.reject(
+                    "INVALID_DESTINATION",
+                    "Destino fora da pasta Disquet."
+                )
                 return
             }
 
@@ -239,24 +254,48 @@ class StorageModule(
                 return
             }
 
+            if (!destinationDir.exists() || !destinationDir.isDirectory) {
+                promise.reject(
+                    "INVALID_DESTINATION",
+                    "A pasta de destino não existe."
+                )
+                return
+            }
+
+            // Se a música já estiver no destino, não precisa movê-la.
+            if (source.parentFile == destinationDir) {
+                promise.resolve(true)
+                return
+            }
+
             val destination = File(destinationDir, source.name)
 
             if (destination.exists()) {
-                promise.reject("FILE_EXISTS", "Essa música já existe na playlist.")
+                promise.reject(
+                    "FILE_EXISTS",
+                    "Essa música já existe na pasta de destino."
+                )
                 return
             }
 
             if (source.renameTo(destination)) {
+                Log.d(
+                    TAG,
+                    "Arquivo movido: ${source.absolutePath} -> ${destination.absolutePath}"
+                )
                 promise.resolve(true)
             } else {
-                promise.reject("MOVE_ERROR", "Não foi possível mover a música.")
+                promise.reject(
+                    "MOVE_ERROR",
+                    "Não foi possível mover a música."
+                )
             }
 
         } catch (e: Exception) {
+            Log.e(TAG, "Erro ao mover arquivo", e)
             promise.reject("ERROR", e.message, e)
         }
     }
-        
 
     companion object {
         private const val FOLDER_NAME = "Disquet"

@@ -1,3 +1,4 @@
+
 import { useAppContext } from "@/src/context/AppContext";
 import { buttonStyles } from "@/src/styles/commonStyles/buttons";
 import { centralizeFlex } from "@/src/styles/commonStyles/centralizeFlex";
@@ -23,6 +24,7 @@ const StorageModule = NativeModules.StorageModule as {
   getFilesFromDir: (folderPath: string) => Promise<string[]>;
   moveFile: (filePath: string, destinationDir: string) => Promise<boolean>;
   getOrCreate: (folderName: string) => Promise<string>;
+  getPath: () => Promise<string | null>;
 };
 
 export default function Home() {
@@ -174,6 +176,44 @@ export default function Home() {
     }
   };
 
+  // Move a música da playlist de volta para a pasta principal.
+  const removeMusicFromPlaylist = async () => {
+    if (!selectedMusic || !selectedPlaylist) return;
+
+    try {
+      // Obtém o caminho real da pasta Disquet pelo módulo nativo.
+      const mainFolder = await StorageModule.getPath();
+
+      if (!mainFolder) {
+        Alert.alert("Erro", "Pasta Disquet não encontrada.");
+        return;
+      }
+
+      const moved = await StorageModule.moveFile(
+        selectedMusic,
+        mainFolder
+      );
+
+      if (!moved) {
+        Alert.alert("Erro", "Não foi possível remover a música da playlist.");
+        return;
+      }
+
+      const updatedFiles = await StorageModule.getFilesFromDir(selectedPlaylist);
+      setPlaylistFiles(updatedFiles);
+
+      await refreshMp3Files();
+
+      setMenuVisible(false);
+      setSelectedMusic(null);
+    } catch (error: any) {
+      Alert.alert(
+        "Erro",
+        error?.message || "Não foi possível remover a música da playlist."
+      );
+    }
+  };
+
   // Define exatamente o conteúdo que será exibido na lista.
   const displayedFiles = selectedPlaylist
     ? playlistFiles
@@ -304,7 +344,7 @@ export default function Home() {
               </Text>
             </Pressable>
 
-            {!showPlaylists && !selectedPlaylist && (
+            {(!showPlaylists || selectedPlaylist !== null) && (
               <Pressable
                 style={{
                   width: 45,
@@ -384,6 +424,17 @@ export default function Home() {
                 Adicionar na playlist
               </Text>
             </Pressable>
+
+            {selectedPlaylist && (
+              <Pressable
+                style={{ paddingVertical: 12 }}
+                onPress={removeMusicFromPlaylist}
+              >
+                <Text style={{ color: "white", fontSize: 16 }}>
+                  Remover da playlist
+                </Text>
+              </Pressable>
+            )}
 
             <Pressable
               style={{ paddingVertical: 12 }}
